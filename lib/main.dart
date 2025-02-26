@@ -46,29 +46,34 @@ class _FadingTextScreenState extends State<FadingTextScreen> {
   }
 
   void pickColor() {
+    Color tempColor = _textColor;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Pick a color'),
         content: SingleChildScrollView(
           child: ColorPicker(
-            pickerColor: _textColor,
+            pickerColor: tempColor,
             onColorChanged: (color) {
-              setState(() {
-                _textColor = color;
-              });
+              tempColor = color;
             },
           ),
         ),
         actions: [
           TextButton(
             child: const Text('Done'),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+              setState(() {
+                _textColor = tempColor;
+              });
+              Navigator.of(context).pop();
+            },
           ),
         ],
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -103,9 +108,9 @@ class _FadingTextScreenState extends State<FadingTextScreen> {
                       opacity: _isVisible ? 1.0 : 0.0,
                       duration: const Duration(seconds: 1),
                       curve: Curves.easeInOut,
-                      child: const Text(
+                      child: Text(
                         'Hello, Flutter!',
-                        style: TextStyle(fontSize: 24),
+                        style: TextStyle(fontSize: 24, color: _textColor),
                       ),
                     ),
                   ),
@@ -150,9 +155,9 @@ class _FadingTextScreenState extends State<FadingTextScreen> {
                 opacity: _isVisible ? 1.0 : 0.0,
                 duration: const Duration(seconds: 2),
                 curve: Curves.easeInOut,
-                child: const Text(
+                child: Text(
                   'Hello, Flutter (Again)!',
-                  style: TextStyle(fontSize: 24),
+                  style: TextStyle(fontSize: 24, color: _textColor),
                 ),
               ),
             ),
