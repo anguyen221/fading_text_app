@@ -30,6 +30,7 @@ class _FadingTextScreenState extends State<FadingTextScreen> {
   bool _isVisible = true;
   bool _isDarkMode = false;
   Color _textColor = Colors.black;
+  bool _showFrame = false;
   PageController _pageController = PageController();
 
   void toggleVisibility() {
@@ -93,22 +94,65 @@ class _FadingTextScreenState extends State<FadingTextScreen> {
           controller: _pageController,
           children: [
             Center(
-              child: AnimatedOpacity(
-                opacity: _isVisible ? 1.0 : 0.0,
-                duration: const Duration(seconds: 1),
-                child: Text(
-                  'Hello, Flutter!',
-                  style: TextStyle(fontSize: 24, color: _textColor),
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: toggleVisibility,
+                    child: AnimatedOpacity(
+                      opacity: _isVisible ? 1.0 : 0.0,
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.easeInOut,
+                      child: const Text(
+                        'Hello, Flutter!',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  AnimatedContainer(
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.easeInOut,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: _showFrame
+                          ? Border.all(
+                              color: Colors.blue,
+                              width: 5,
+                            )
+                          : null,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
+                        'https://cdn-images-1.medium.com/v2/resize:fit:1200/1*5-aoK8IBmXve5whBQM90GA.png',
+                        width: 150,
+                        height: 150,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SwitchListTile(
+                    title: const Text('Show Frame'),
+                    value: _showFrame,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _showFrame = value;
+                      });
+                    },
+                  ),
+                ],
               ),
             ),
             Center(
               child: AnimatedOpacity(
                 opacity: _isVisible ? 1.0 : 0.0,
                 duration: const Duration(seconds: 2),
-                child: Text(
+                curve: Curves.easeInOut,
+                child: const Text(
                   'Hello, Flutter (Again)!',
-                  style: TextStyle(fontSize: 24, color: _textColor),
+                  style: TextStyle(fontSize: 24),
                 ),
               ),
             ),
