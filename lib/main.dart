@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +29,7 @@ class FadingTextScreen extends StatefulWidget {
 class _FadingTextScreenState extends State<FadingTextScreen> {
   bool _isVisible = true;
   bool _isDarkMode = false;
+  Color _textColor = Colors.black;
   PageController _pageController = PageController();
 
   void toggleVisibility() {
@@ -40,6 +42,31 @@ class _FadingTextScreenState extends State<FadingTextScreen> {
     setState(() {
       _isDarkMode = !_isDarkMode;
     });
+  }
+
+  void pickColor() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Pick a color'),
+        content: SingleChildScrollView(
+          child: ColorPicker(
+            pickerColor: _textColor,
+            onColorChanged: (color) {
+              setState(() {
+                _textColor = color;
+              });
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: const Text('Done'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -56,6 +83,10 @@ class _FadingTextScreenState extends State<FadingTextScreen> {
               icon: Icon(_isDarkMode ? Icons.nightlight_round : Icons.wb_sunny),
               onPressed: toggleTheme,
             ),
+            IconButton(
+              icon: const Icon(Icons.palette),
+              onPressed: pickColor,
+            ),
           ],
         ),
         body: PageView(
@@ -65,9 +96,9 @@ class _FadingTextScreenState extends State<FadingTextScreen> {
               child: AnimatedOpacity(
                 opacity: _isVisible ? 1.0 : 0.0,
                 duration: const Duration(seconds: 1),
-                child: const Text(
+                child: Text(
                   'Hello, Flutter!',
-                  style: TextStyle(fontSize: 24),
+                  style: TextStyle(fontSize: 24, color: _textColor),
                 ),
               ),
             ),
@@ -75,9 +106,9 @@ class _FadingTextScreenState extends State<FadingTextScreen> {
               child: AnimatedOpacity(
                 opacity: _isVisible ? 1.0 : 0.0,
                 duration: const Duration(seconds: 2),
-                child: const Text(
+                child: Text(
                   'Hello, Flutter (Again)!',
-                  style: TextStyle(fontSize: 24),
+                  style: TextStyle(fontSize: 24, color: _textColor),
                 ),
               ),
             ),
