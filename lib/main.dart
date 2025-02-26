@@ -40,10 +40,12 @@ class _FadingTextScreenState extends State<FadingTextScreen> {
   }
 
   void toggleTheme() {
-    setState(() {
-      _isDarkMode = !_isDarkMode;
+  setState(() {
+    _isDarkMode = !_isDarkMode;
+    _textColor = _isDarkMode ? Colors.white : Colors.black;
     });
   }
+
 
   void pickColor() {
     Color tempColor = _textColor;
